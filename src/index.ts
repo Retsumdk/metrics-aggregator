@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /**
  * metrics-aggregator - Prometheus-compatible metrics aggregation service
- * Built with Zo Computer by The BookMaster
+ * Built by Retsumdk
  */
 
 import { Command } from "commander";
