@@ -21,6 +21,8 @@ const DEFAULTS: Config = {
   retries: 3,
 };
 
+const name = "metrics-aggregator";
+
 function loadConfig(): Config {
   const cfgPath = join(process.cwd(), "config.json");
   if (existsSync(cfgPath)) {
