@@ -1,17 +1,65 @@
 {
   "name": "metrics-aggregator",
-  "description": "Prometheus-compatible metrics aggregation service",
-  "version": "1.0.0",
-  "type": "module",
-  "scripts": {
-    "test": "bun test",
-    "build": "tsc"
+  "version": "1.1.0",
+  "description": "Prometheus-compatible metrics aggregation service: parse exposition text, merge samples from many sources onto a reduced label set, and re-emit valid exposition output over HTTP or the CLI.",
+  "keywords": [
+    "prometheus",
+    "metrics",
+    "observability",
+    "aggregation",
+    "openmetrics",
+    "exposition-format",
+    "pushgateway",
+    "monitoring",
+    "typescript",
+    "zero-dependencies"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Retsumdk",
+    "url": "https://github.com/Retsumdk"
   },
-  "dependencies": {
-    "commander": "^11.1.0"
+  "homepage": "https://github.com/Retsumdk/metrics-aggregator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Retsumdk/metrics-aggregator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Retsumdk/metrics-aggregator/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "metrics-aggregator": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "examples"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "bun test",
+    "start": "node dist/cli.js",
+    "cli": "bun src/cli.ts",
+    "example:aggregate": "bun src/cli.ts aggregate examples/cluster-metrics.txt --by service,region --agg sum"
   },
   "devDependencies": {
-    "bun-types": "^1.0.0",
-    "typescript": "^5.3.0"
+    "@types/bun": "^1.2.0",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
   }
 }

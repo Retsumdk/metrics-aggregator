@@ -1,53 +1,96 @@
-#!/usr/bin/env bun
 /**
- * metrics-aggregator - Prometheus-compatible metrics aggregation service
- * Built by Retsumdk
+ * metrics-aggregator — the public API.
+ *
+ * A Prometheus-compatible aggregation service: parse the text exposition format,
+ * merge samples from many sources onto a reduced label set, and re-emit valid
+ * exposition text. Zero runtime dependencies; Node's standard library only.
+ *
+ * ```ts
+ * import { parseExposition, aggregate, encodeExposition } from "metrics-aggregator";
+ *
+ * const a = parseExposition(await Bun.file("node-a.txt").text());
+ * const b = parseExposition(await Bun.file("node-b.txt").text());
+ * const merged = aggregate([...a.series, ...b.series], b.metadata, { without: ["instance"] });
+ * process.stdout.write(encodeExposition(merged.series, merged.metadata));
+ * ```
  */
 
-import { Command } from "commander";
-import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+export { VERSION } from "./version.ts";
 
-interface Config {
-  apiKey?: string;
-  baseUrl: string;
-  timeout: number;
-  retries: number;
-}
+/**
+ * The CLI entry point, re-exported so an embedder (or a test harness) can drive
+ * the command line in-process instead of spawning a child Bun process.
+ */
+export { main } from "./cli.ts";
 
-const DEFAULTS: Config = {
-  baseUrl: "https://api.example.com",
-  timeout: 30000,
-  retries: 3,
-};
+export * from "./types.ts";
 
-const name = "metrics-aggregator";
+export {
+  ParseError,
+  parseExposition,
+  parseSeries,
+} from "./parser.ts";
 
-function loadConfig(): Config {
-  const cfgPath = join(process.cwd(), "config.json");
-  if (existsSync(cfgPath)) {
-    try {
-      return { ...DEFAULTS, ...JSON.parse(readFileSync(cfgPath, "utf-8")) };
-    } catch { /* ignore */ }
-  }
-  return { ...DEFAULTS };
-}
+export {
+  EncodeError,
+  encodeExposition,
+  encodeSample,
+  encodeExemplar,
+} from "./encoder.ts";
 
-async function main(cfg: Config) {
-  console.log(`[${name}] Connected to ${cfg.baseUrl}`);
-  console.log(`[${name}] Timeout: ${cfg.timeout}ms | Retries: ${cfg.retries}`);
-  // TODO: implement your logic here
-  console.log(`[${name}] Done.`);
-}
+export {
+  AGGREGATOR_NAMES,
+  AggregateConfigError,
+  AggregateConflictError,
+  aggregate,
+} from "./aggregate.ts";
 
-const program = new Command();
-program.name("metrics-aggregator").description("Prometheus-compatible metrics aggregation service").version("1.0.0")
-  .option("-c, --config <path>", "Config file path", "config.json")
-  .option("-v, --verbose", "Verbose mode")
-  .action(async (opts) => {
-    const cfg = loadConfig();
-    if (opts.verbose) console.log("Verbose mode on");
-    try { await main(cfg); }
-    catch (e) { console.error(`Error: ${e}`); process.exit(1); }
-  });
-program.parse(process.argv);
+export {
+  ScrapeError,
+  resolveRetryDelayMs,
+  scrapeAll,
+  scrapeTarget,
+} from "./scrape.ts";
+
+export {
+  MetricStore,
+  StoreError,
+  dedupeSeries,
+  mergeMetadataMaps,
+} from "./store.ts";
+
+export {
+  createHandler,
+  parseAggregateOptions,
+  requireAuth,
+  startServer,
+} from "./server.ts";
+
+export {
+  METRIC_NAME_RE,
+  LABEL_NAME_RE,
+  METRIC_TYPES,
+  canonicalLabels,
+  compareSeries,
+  escapeHelpText,
+  escapeLabelValue,
+  familyCandidates,
+  formatValue,
+  isMetricType,
+  isValidLabelName,
+  isValidMetricName,
+  labelsEqual,
+  labelsKey,
+  labelsToString,
+  mergeLabels,
+  metadataFor,
+  metricTypeOf,
+  omitLabels,
+  parseTimestamp,
+  parseValue,
+  pickLabels,
+  seriesSuffix,
+  sortedLabelNames,
+  sortSeries,
+  unescapeLabelValue,
+} from "./format.ts";

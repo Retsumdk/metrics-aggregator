@@ -1,0 +1,40 @@
+# HELP http_requests_total Total HTTP requests served, by service and instance.
+# TYPE http_requests_total counter
+http_requests_total{service="api",instance="10.0.0.1:8080"} 120
+http_requests_total{service="api",instance="10.0.0.2:8080"} 80
+http_requests_total{service="api",instance="10.0.0.3:8080"} 25
+http_requests_total{service="api",instance="10.0.0.4:8080"} 60
+http_requests_total{service="web",instance="10.0.1.1:8080"} 90
+http_requests_total{service="web",instance="10.0.1.2:8080"} 40
+# HELP http_request_duration_seconds Request latency.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.1:8080",le="0.1"} 90
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.1:8080",le="0.5"} 118
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.1:8080",le="1"} 120
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.1:8080",le="+Inf"} 120
+http_request_duration_seconds_sum{service="api",instance="10.0.0.1:8080"} 18.4
+http_request_duration_seconds_count{service="api",instance="10.0.0.1:8080"} 120
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.2:8080",le="0.1"} 40
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.2:8080",le="0.5"} 72
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.2:8080",le="1"} 80
+http_request_duration_seconds_bucket{service="api",instance="10.0.0.2:8080",le="+Inf"} 80
+http_request_duration_seconds_sum{service="api",instance="10.0.0.2:8080"} 11.2
+http_request_duration_seconds_count{service="api",instance="10.0.0.2:8080"} 80
+# HELP payload_bytes Request and response payload size in bytes.
+# TYPE payload_bytes summary
+payload_bytes{service="api",instance="10.0.0.1:8080",quantile="0.5"} 1024
+payload_bytes{service="api",instance="10.0.0.1:8080",quantile="0.99"} 65536
+payload_bytes_sum{service="api",instance="10.0.0.1:8080"} 6.1e6
+payload_bytes_count{service="api",instance="10.0.0.1:8080"} 120
+# HELP queue_depth Items waiting in the worker queue.
+# TYPE queue_depth gauge
+queue_depth{service="api",queue="mail"} 4
+queue_depth{service="api",queue="sms"} 0
+queue_depth{service="web",queue="mail"} 2
+# HELP process_resident_memory_bytes Resident memory of the exporter process.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes{service="api",instance="10.0.0.1:8080"} 5.24288e+07
+process_resident_memory_bytes{service="api",instance="10.0.0.2:8080"} 4.9287168e+07
+# HELP build_info Build metadata; the value is always 1.
+# TYPE build_info gauge
+build_info{service="api",version="2.4.1",revision="9f3c1ab"} 1 1757952000000

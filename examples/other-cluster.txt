@@ -1,0 +1,24 @@
+# HELP http_requests_total Total HTTP requests served, by service and instance.
+# TYPE http_requests_total counter
+http_requests_total{service="api",instance="10.1.0.1:8080",region="us-east"} 200
+http_requests_total{service="api",instance="10.1.0.2:8080",region="us-east"} 85
+http_requests_total{service="api",instance="10.1.1.1:8080",region="eu-west"} 10
+http_requests_total{service="web",instance="10.1.0.9:8080",region="us-east"} 130
+# HELP http_request_duration_seconds Request latency.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{service="api",instance="10.1.0.1:8080",le="0.1"} 5
+http_request_duration_seconds_bucket{service="api",instance="10.1.0.1:8080",le="0.5"} 20
+http_request_duration_seconds_bucket{service="api",instance="10.1.0.1:8080",le="1"} 200
+http_request_duration_seconds_bucket{service="api",instance="10.1.0.1:8080",le="+Inf"} 200
+http_request_duration_seconds_sum{service="api",instance="10.1.0.1:8080"} 7.5
+http_request_duration_seconds_count{service="api",instance="10.1.0.1:8080"} 200
+# HELP queue_depth Items waiting in the worker queue.
+# TYPE queue_depth gauge
+queue_depth{service="api",queue="mail"} 12
+queue_depth{service="web",queue="mail"} 1
+# HELP process_resident_memory_bytes Resident memory of the exporter process.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes{service="api",instance="10.1.0.1:8080"} 4.8226304e+07
+# HELP build_info Build metadata; the value is always 1.
+# TYPE build_info gauge
+build_info{service="api",version="2.4.1",revision="9f3c1ab"} 1 1757952000000
