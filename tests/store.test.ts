@@ -135,8 +135,10 @@ describe("MetricStore", () => {
     // Both groups were pushed within the same millisecond, so a TTL that has
     // not expired yet removes nothing...
     expect(store.prune(60_000, pushedAt + 59_000)).toBe(0);
-    // ...and once it has, every stale group goes at once.
-    expect(store.prune(60_000, pushedAt + 60_001)).toBe(2);
+    // ...and once it has, every stale group goes at once. A +500ms margin
+    // keeps this deterministic when the two pushes straddle a millisecond
+    // boundary (a 1ms skew would survive a strict `> ttl` cut at +60_001).
+    expect(store.prune(60_000, pushedAt + 60_500)).toBe(2);
     expect(store.size).toBe(0);
 
     // Re-pushing a group refreshes its clock, so an active producer is never
